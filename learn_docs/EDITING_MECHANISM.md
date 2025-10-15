@@ -46,7 +46,6 @@ system_prompt = """
 使用 *SEARCH/REPLACE* 块来编辑代码：
 
 filename.py
-```python
 <<<<<<< SEARCH
 旧代码内容
 =======
@@ -74,11 +73,10 @@ Aider 支持多种文本格式的编辑指令，每种格式对应一个 Coder �
 
 #### 示例
 
-```python
-# LLM 输出的文本（不是函数调用）：
+LLM 输出的文本（不是函数调用）：
 
+```
 mathweb/flask/app.py
-```python
 <<<<<<< SEARCH
 from flask import Flask
 =======
@@ -87,8 +85,8 @@ from flask import Flask
 >>>>>>> REPLACE
 ```
 
+```
 mathweb/flask/app.py
-```python
 <<<<<<< SEARCH
 def factorial(n):
     "compute factorial"
@@ -168,9 +166,9 @@ def do_replace(fname, content, before_text, after_text, fence=None):
 
 #### 示例
 
-```python
-# LLM 输出：
+LLM 输出：
 
+```diff
 --- mathweb/flask/app.py
 +++ mathweb/flask/app.py
 @@ -1,4 +1,5 @@
@@ -198,11 +196,10 @@ def do_replace(fname, content, before_text, after_text, fence=None):
 
 #### 示例
 
-```python
-# LLM 输出：
+LLM 输出：
 
-app.py
 ```python
+# app.py
 import math
 from flask import Flask
 
@@ -210,7 +207,6 @@ app = Flask(__name__)
 
 def get_factorial(n):
     return str(math.factorial(n))
-```
 ```
 
 ### 4. Patch 格式 (PatchCoder)
@@ -277,18 +273,16 @@ def replace_most_similar_chunk(whole, part, replace):
 
 ```python
 # 文本格式：用户可以直接看到 LLM 的编辑意图
-"""
+llm_output = """
 我将修改 app.py 来添加 math 导入：
 
 app.py
-```python
 <<<<<<< SEARCH
 from flask import Flask
 =======
 import math
 from flask import Flask
 >>>>>>> REPLACE
-```
 """
 
 # 工具调用：用户看不到，是黑盒
@@ -320,13 +314,13 @@ from flask import Flask
 system_prompt = """
 Every *SEARCH/REPLACE block* must use this format:
 1. The *FULL* file path alone on a line
-2. The opening fence: ```python
+2. The opening fence
 3. <<<<<<< SEARCH
 4. A contiguous chunk of lines to search for
 5. =======
 6. The lines to replace
 7. >>>>>>> REPLACE
-8. The closing fence: ```
+8. The closing fence
 
 Rules:
 - SEARCH section must EXACTLY MATCH existing code
@@ -378,14 +372,12 @@ response.content = """
 To add the math import, we need to modify app.py:
 
 app.py
-```python
 <<<<<<< SEARCH
 from flask import Flask
 =======
 import math
 from flask import Flask
 >>>>>>> REPLACE
-```
 """
 
 # 5. 解析编辑指令（editblock_coder.py）
@@ -489,28 +481,24 @@ system = "You can use edit_file(path, old, new) to edit files"
 system = """Use SEARCH/REPLACE blocks:
 
 filename.py
-```language
 <<<<<<< SEARCH
 old code
 =======
 new code
 >>>>>>> REPLACE
-```
 """
 
 # LLM 响应
-"""
+llm_response = """
 I'll add the math import to app.py:
 
 app.py
-```python
 <<<<<<< SEARCH
 from flask import Flask
 =======
 import math
 from flask import Flask
 >>>>>>> REPLACE
-```
 """
 
 # 优点：
@@ -539,13 +527,13 @@ system_reminder = """
 
 Every *SEARCH/REPLACE block* must use this format:
 1. The *FULL* file path alone on a line, verbatim.
-2. The opening fence: ```python
+2. The opening fence (three backticks and language)
 3. The start of search block: <<<<<<< SEARCH
 4. A contiguous chunk of lines to search for in the existing source code
 5. The dividing line: =======
 6. The lines to replace into the source code
 7. The end of the replace block: >>>>>>> REPLACE
-8. The closing fence: ```
+8. The closing fence (three backticks)
 
 Use the *FULL* file path, as shown to you by the user.
 
@@ -594,17 +582,14 @@ To make this change we need to modify `mathweb/flask/app.py` to:
 Here are the *SEARCH/REPLACE* blocks:
 
 mathweb/flask/app.py
-```python
 <<<<<<< SEARCH
 from flask import Flask
 =======
 import math
 from flask import Flask
 >>>>>>> REPLACE
-```
 
 mathweb/flask/app.py
-```python
 <<<<<<< SEARCH
 def factorial(n):
     "compute factorial"
@@ -616,16 +601,13 @@ def factorial(n):
 
 =======
 >>>>>>> REPLACE
-```
 
 mathweb/flask/app.py
-```python
 <<<<<<< SEARCH
     return str(factorial(n))
 =======
     return str(math.factorial(n))
 >>>>>>> REPLACE
-```
 """
     }
 ]

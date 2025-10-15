@@ -52,7 +52,6 @@ filename.py
 =======
 新代码内容
 >>>>>>> REPLACE
-```
 """
 
 response = llm.call(messages=messages)  # ✅ 普通文本响应
@@ -101,7 +100,6 @@ def factorial(n):
 
 =======
 >>>>>>> REPLACE
-```
 ```
 
 #### 解析流程
